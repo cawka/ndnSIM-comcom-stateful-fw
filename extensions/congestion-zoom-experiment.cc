@@ -18,7 +18,7 @@
  * Author: Alexander Afanasyev <alexander.afanasyev@ucla.edu>
  */
 
-#include "congestion-zoom.h"
+#include "congestion-zoom-experiment.h"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
@@ -30,27 +30,25 @@
 #include <ns3/core-module.h>
 
 #include <ns3/ndnSIM-module.h>
-#include <ns3/ndnSIM/utils/tracers/ndn-l3-rate-tracer.h>
-#include <ns3/ndnSIM/utils/tracers/ipv4-rate-l3-tracer.h>
 
 using namespace std;
 using namespace boost;
 
-NS_LOG_COMPONENT_DEFINE ("Scenario");
+NS_LOG_COMPONENT_DEFINE ("CongestionZoomExperiment");
 
 #define _LOG_INFO(x) NS_LOG_INFO(x)
 
-Experiment::Experiment ()
+CongestionZoomExperiment::CongestionZoomExperiment ()
   : BaseExperiment (6)
 {
 }
 
-Experiment::~Experiment ()
+CongestionZoomExperiment::~CongestionZoomExperiment ()
 {
 }
 
 void
-Experiment::ConfigureTopology (const std::string &topology)
+CongestionZoomExperiment::ConfigureTopology (const std::string &topology)
 {
   Names::Clear ();
   _LOG_INFO ("Configure Topology");
@@ -64,7 +62,7 @@ Experiment::ConfigureTopology (const std::string &topology)
 }
 
 ApplicationContainer
-Experiment::AddNdnApplications ()
+CongestionZoomExperiment::AddNdnApplications ()
 {
   ApplicationContainer apps;
 
@@ -88,7 +86,7 @@ Experiment::AddNdnApplications ()
 }
 
 ApplicationContainer
-Experiment::AddTcpApplications ()
+CongestionZoomExperiment::AddTcpApplications ()
 {
   ApplicationContainer apps;
 
@@ -113,59 +111,4 @@ Experiment::AddTcpApplications ()
     (producerHelper.Install (server));
 
   return apps;
-}
-
-
-
-int
-main (int argc, char *argv[])
-{
-  _LOG_INFO ("Begin congestion-pop scenario");
-
-  Config::SetDefault ("ns3::PointToPointNetDevice::DataRate", StringValue ("1Mbps"));
-  // Config::SetDefault ("ns3::DropTailQueue::MaxPackets", StringValue ("60"));
-  Config::SetDefault ("ns3::TcpSocket::SegmentSize", StringValue ("1040"));
-
-  Config::SetDefault ("ns3::BulkSendApplication::SendSize", StringValue ("1040"));
-
-  Config::SetDefault ("ns3::ConfigStore::Filename", StringValue ("attributes.xml"));
-  Config::SetDefault ("ns3::ConfigStore::Mode", StringValue ("Save"));
-  Config::SetDefault ("ns3::ConfigStore::FileFormat", StringValue ("Xml"));
-
-  CommandLine cmd;
-  cmd.Parse (argc, argv);
-
-  // ConfigStore config;
-  // config.ConfigureDefaults ();
-
-  Experiment experiment;
-  string prefix = "congestion-zoom-";
-
-  cout << "NDN experiment\n";
-  // NDN
-  {
-    experiment.ConfigureTopology ("topologies/congestion-zoom.txt");
-    experiment.InstallNdnStack ();
-    experiment.AddNdnApplications ();
-
-    boost::tuple< boost::shared_ptr<std::ostream>, std::list<Ptr<ndn::L3RateTracer> > >
-      rateTracers = ndn::L3RateTracer::InstallAll (prefix + "rate-trace.log", Seconds (0.5));
-
-    experiment.Run (Seconds (50.0));
-  }
-
-  cout << "TCP experiment\n";
-  // TCP
-  {
-    experiment.ConfigureTopology ("topologies/congestion-zoom.txt");
-    experiment.InstallIpStack ();
-    experiment.AddTcpApplications ();
-
-    boost::tuple< boost::shared_ptr<std::ostream>, std::list<Ptr<Ipv4RateL3Tracer> > >
-      rateTracers = Ipv4RateL3Tracer::InstallAll (prefix + "ipv4-rate-trace.log", Seconds (0.5));
-
-    experiment.Run (Seconds (50.0));
-  }
-
-  return 0;
 }

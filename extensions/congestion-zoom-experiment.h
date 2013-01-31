@@ -18,8 +18,8 @@
  * Author: Alexander Afanasyev <alexander.afanasyev@ucla.edu>
  */
 
-#ifndef CONGESTION_ZOOM_H
-#define CONGESTION_ZOOM_H
+#ifndef CONGESTION_ZOOM_EXPERIMENT_H
+#define CONGESTION_ZOOM_EXPERIMENT_H
 
 #include "base-experiment.h"
 
@@ -27,13 +27,13 @@
 
 using namespace ns3;
 
-class Experiment : public BaseExperiment
+class CongestionZoomExperiment : public BaseExperiment
 {
 public:
-  Experiment ();
+  CongestionZoomExperiment ();
 
   virtual
-  ~Experiment ();
+  ~CongestionZoomExperiment ();
 
   virtual void
   ConfigureTopology (const std::string &topology);
@@ -46,4 +46,4 @@ public:
 };
 
 
-#endif
+#endif // CONGESTION_ZOOM_EXPERIMENT_H

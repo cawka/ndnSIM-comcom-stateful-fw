@@ -44,7 +44,7 @@ namespace ns3
 
 void PrintTime (const Time &nextTime, const Time &endTime)
 {
-  _LOG_INFO ("Progress: " << static_cast<int>(100*(endTime-Simulator::Now ()).ToDouble (Time::S) / endTime.ToDouble (Time::S)) << "%");
+  _LOG_INFO ("Progress: " << static_cast<int>(100*(Simulator::Now ()).ToDouble (Time::S) / endTime.ToDouble (Time::S)) << "%");
   Simulator::Schedule (nextTime, PrintTime, nextTime, endTime);
 }
 
@@ -94,7 +94,8 @@ BaseExperiment::InstallNdnStack (bool installFIBs/* = true*/)
 
   // Install NDN stack
   ndn::StackHelper ndnHelper;
-  ndnHelper.SetForwardingStrategy ("ns3::ndn::fw::BestRoute");
+  ndnHelper.SetForwardingStrategy ("ns3::ndn::fw::BestRoute::PerOutFaceLimits",
+                                   "Limit", "ns3::ndn::Limits::Window");
   ndnHelper.EnableLimits (true, Seconds(0.1));
   ndnHelper.SetDefaultRoutes (false);
   ndnHelper.InstallAll ();
