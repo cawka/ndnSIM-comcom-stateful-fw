@@ -51,8 +51,6 @@ def configure(conf):
     else:
         conf.env.append_value('CXXFLAGS', ['-O3', '-g'])
 
-    Logs.error (conf.env["CXX"])
-
     if conf.env["CXX"] == ["clang++"]:
         conf.env.append_value('CXXFLAGS', ['-fcolor-diagnostics'])
 
