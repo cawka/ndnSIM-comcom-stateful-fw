@@ -20,6 +20,8 @@
 
 #include "base-experiment.h"
 
+#include "extra-routing.h"
+
 #include <ns3/log.h>
 #include <ns3/simulator.h>
 #include <ns3/names.h>
@@ -95,7 +97,8 @@ BaseExperiment::InstallNdnStack (bool installFIBs/* = true*/)
   // Install NDN stack
   ndn::StackHelper ndnHelper;
   ndnHelper.SetForwardingStrategy ("ns3::ndn::fw::BestRoute::PerOutFaceLimits",
-                                   "Limit", "ns3::ndn::Limits::Window");
+                                   "Limit", "ns3::ndn::Limits::Rate",
+                                   "EnableNACKs", "true");
   ndnHelper.EnableLimits (true, Seconds(0.1));
   ndnHelper.SetDefaultRoutes (false);
   ndnHelper.InstallAll ();
@@ -105,8 +108,12 @@ BaseExperiment::InstallNdnStack (bool installFIBs/* = true*/)
 
   reader->ApplyOspfMetric ();
 
-  routingHelper.AddOriginsForAll ();
-  routingHelper.CalculateRoutes (); // should be replaced to different calculate routes !!!
+  if (installFIBs)
+    {
+      routingHelper.AddOriginsForAll ();
+
+      NdnGlobalRouter_CalculateAllPossibleRoutes (); // check extra-routing.cc
+    }
 }
 
 void

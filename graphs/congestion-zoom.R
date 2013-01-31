@@ -7,15 +7,15 @@ suppressPackageStartupMessages (library(reshape2))
 source ("graphs/graph-style.R")
 
 tcp.data = read.table ('results/congestion-zoom-ipv4-rate-trace.log', header = TRUE, sep = "\t")
-tcp.data$Node = factor (ndn.data$Node)
-tcp.data$Type = factor (ndn.data$Type)
-tcp.data$Interface = factor (ndn.data$Interface-1)
+tcp.data$Node = factor (tcp.data$Node)
+tcp.data$Type = factor (tcp.data$Type)
+tcp.data$Interface = factor (tcp.data$Interface-1)
 
 tcp.data = subset (tcp.data, Type == "In")[,c(1,2,3,6)]
 
 ## tcp.data.agg = summarizeBy ()
 
-ggplot (data=tcp.data, aes(x=Time, y=Kilobytes)) + geom_point () + facet_wrap (~ Node + Interface)
+## ggplot (data=tcp.data, aes(x=Time, y=Kilobytes)) + geom_point () + facet_wrap (~ Node + Interface)
 
 
 ndn.data = read.table ('results/congestion-zoom-rate-trace.log', header = TRUE, sep = "\t")
@@ -30,7 +30,11 @@ tcp.data$Type = "TCP"
 
 data = rbind (ndn.data, tcp.data)
 
-ggplot (data=data, aes(x=Time, y=Kilobytes, color = Type)) + geom_point () + facet_wrap (~ Node + Interface)
+ggplot (data=data, aes(x=Time, y=Kilobytes, color = Type, linetype = Type)) +
+  geom_line (size = 0.8) +
+  facet_wrap (~ Node + Interface) +
+  scale_color_manual (values = c("red", "blue")) +
+  theme_custom ()
 
 
 ## data.packets = subset (raw.data, Type == "InData") #%/* | Type == "OutData")
