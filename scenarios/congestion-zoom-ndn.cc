@@ -39,11 +39,14 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::PointToPointNetDevice::DataRate", StringValue ("1Mbps"));
   // Config::SetDefault ("ns3::DropTailQueue::MaxPackets", StringValue ("60"));
 
+  Config::SetDefault ("ns3::ndn::ConsumerWindow::Window", StringValue ("1"));
+  // Config::SetDefault ("ns3::ndn::ConsumerWindow::InitialWindowOnTimeout", StringValue ("false")); // irrelevant
+
   CommandLine cmd;
   cmd.Parse (argc, argv);
 
   CongestionZoomExperiment experiment;
-  string prefix = "results/congestion-zoom-";
+  string prefix = "results/congestion-zoom-ndn-";
 
   _LOG_INFO ("NDN experiment");
   experiment.ConfigureTopology ("topologies/congestion-zoom.txt");

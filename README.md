@@ -6,7 +6,7 @@ Custom version of NS-3 and specified version of ndnSIM needs to be installed.
 The code should also work with the latest version of ndnSIM, but it is not guaranteed.
 
     git clone git@github.com:cawka/ns-3-dev-ndnSIM.git -b ns-3.16-ndnSIM ns-3
-    git clone git@github.com:NDN-Routing/ndnSIM.git -b v0.2.1 ns-3/src/ndnSIM
+    git clone git@github.com:NDN-Routing/ndnSIM.git -b v0.2.2 ns-3/src/ndnSIM
 
     cd ns-3
     ./waf configure
@@ -63,13 +63,13 @@ Available simulations
 
 Figure 9 from "A Case for Stateful Forwarding Plane" paper:
 
-To generate NDN exepriment trace (results/congestion-zoom-rate-trace.log):
+To generate NDN exepriment trace (results/congestion-zoom-ndn-rate-trace.log):
 
-    ./waf --run congestion-zoom-ndn
+    NS_LOG=BaseExperiment:Experiment ./waf --run congestion-zoom-ndn
 
 To generate TCP experiment trace
 
-    ./waf --run results/congestion-zoom-ipv4-rate-trace.log
+    NS_LOG=BaseExperiment:Experiment ./waf --run results/congestion-zoom-tcp-rate-trace.log
 
 If you have R with ggplot2 package installed, the generated files can be processed with the following R script,
 which produces a raw graph for the figure (graphs/pdfs/congestion-zoom.pdf):

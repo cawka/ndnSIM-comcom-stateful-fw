@@ -18,14 +18,14 @@
  * Author: Alexander Afanasyev <alexander.afanasyev@ucla.edu>
  */
 
-#include "congestion-zoom-experiment.h"
+#include "congestion-pop-experiment.h"
 #include <ns3/core-module.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
 #include <ns3/ndnSIM-module.h>
-#include <ns3/ndnSIM/utils/tracers/ipv4-rate-l3-tracer.h>
+#include <ns3/ndnSIM/utils/tracers/ipv4-seqs-app-tracer.h>
 
 using namespace std;
 using namespace boost;
@@ -40,26 +40,47 @@ main (int argc, char *argv[])
   _LOG_INFO ("Begin congestion-pop scenario (TCP)");
 
   Config::SetDefault ("ns3::PointToPointNetDevice::DataRate", StringValue ("1Mbps"));
-  // Config::SetDefault ("ns3::DropTailQueue::MaxPackets", StringValue ("60"));
+  Config::SetDefault ("ns3::DropTailQueue::MaxPackets", StringValue ("60"));
   Config::SetDefault ("ns3::TcpSocket::SegmentSize", StringValue ("1040"));
 
   Config::SetDefault ("ns3::BulkSendApplication::SendSize", StringValue ("1040"));
 
+  Config::SetDefault ("ns3::RttEstimator::MaxRTO", StringValue ("1s"));
+
+  uint32_t run = 1;
   CommandLine cmd;
+  cmd.AddValue ("run", "Simulation run", run);
   cmd.Parse (argc, argv);
 
-  CongestionZoomExperiment experiment;
-  string prefix = "results/congestion-zoom-tcp-";
+  Config::SetGlobal ("RngRun", IntegerValue (run));
+  cout << "seed = " << SeedManager::GetSeed () << ", run = " << SeedManager::GetRun () << endl;
 
-  _LOG_INFO ("TCP experiment");
-  experiment.ConfigureTopology ("topologies/congestion-zoom.txt");
+  CongestionPopExperiment experiment;
+  cout << "Run " << run << endl;
+  string prefix = "results/congestion-pop-run-" + lexical_cast<string> (run) + "-tcp-";
+
+  experiment.GenerateRandomPairs (20);
+  experiment.DumpPairs (prefix + "apps.log");
+
+  experiment.ConfigureTopology ("topologies/sprint-pops");
   experiment.InstallIpStack ();
-  experiment.AddTcpApplications ();
+  ApplicationContainer apps = experiment.AddTcpApplications ();
 
-  boost::tuple< boost::shared_ptr<std::ostream>, std::list<Ptr<Ipv4RateL3Tracer> > >
-    rateTracers = Ipv4RateL3Tracer::InstallAll (prefix + "rate-trace.log", Seconds (0.5));
+  for (uint32_t i = 0; i < apps.GetN () / 2; i++)
+    {
+      apps.Get (i*2)->SetStartTime (Seconds (1+i));
+      apps.Get (i*2 + 1)->SetStartTime (Seconds (1+i));
+    }
 
-  experiment.Run (Seconds (50.0));
+  boost::tuple< boost::shared_ptr<std::ostream>, std::list<Ptr<Ipv4SeqsAppTracer> > > tracers =
+    Ipv4SeqsAppTracer::InstallAll (prefix + "consumers-seqs.log");
 
+  // CcnxTraceHelper traceHelper;
+  // traceHelper.EnableIpv4SeqsAppAll (prefix + "tcp-consumers-seqs.log");
+  // traceHelper.EnableWindowsTcpAll (prefix + "tcp-windows.log");
+
+  experiment.Run (Seconds (200.0));
+
+  _LOG_INFO ("Finish congestion-pop scenario");
   return 0;
 }

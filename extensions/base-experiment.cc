@@ -184,6 +184,19 @@ BaseExperiment::SetPair (uint32_t pairId)
 }
 
 void
+BaseExperiment::DumpPairs (const std::string &filename)
+{
+  ofstream of_nodes (filename.c_str ());
+  for (list<tuple<uint32_t,uint32_t> >::iterator i = m_pairs.begin (); i != m_pairs.end (); i++)
+    {
+      of_nodes << "From " << i->get<0> ()
+               << " to "  << i->get<1> ();
+      of_nodes << "\n";
+    }
+  of_nodes.close ();
+}
+
+void
 BaseExperiment::Run (const Time &finishTime)
 {
   _LOG_INFO ("Run Simulation");

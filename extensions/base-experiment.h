@@ -55,6 +55,9 @@ public:
   SetPair (uint32_t pairId);
 
   void
+  DumpPairs (const std::string &filename);
+
+  void
   Run (const Time &finishTime);
 
 protected:

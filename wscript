@@ -8,6 +8,7 @@ import subprocess
 
 def options(opt):
     opt.add_option('--debug',action='store_true',default=False,dest='debug',help='''debugging mode''')
+    opt.add_option('--logging',action='store_true',default=True,dest='logging',help='''enable logging in simulation scripts''')
     opt.add_option('--run',
                    help=('Run a locally built program; argument can be a program name,'
                          ' or a command starting with the program name.'),
@@ -53,6 +54,9 @@ def configure(conf):
 
     if conf.env["CXX"] == ["clang++"]:
         conf.env.append_value('CXXFLAGS', ['-fcolor-diagnostics'])
+
+    if conf.options.logging:
+        conf.define ('NS3_LOG_ENABLE', 1)
 
 def build (bld):
     deps = 'BOOST BOOST_IOSTREAMS' + ' '.join (['ns3_'+dep for dep in ['core', 'network', 'internet', 'ndnSIM', 'topology-read', 'applications', 'visualizer']]).upper ()
