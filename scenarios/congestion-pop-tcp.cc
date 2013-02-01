@@ -53,10 +53,10 @@ main (int argc, char *argv[])
   cmd.Parse (argc, argv);
 
   Config::SetGlobal ("RngRun", IntegerValue (run));
-  cout << "seed = " << SeedManager::GetSeed () << ", run = " << SeedManager::GetRun () << endl;
+  NS_LOG_INFO ("seed = " << SeedManager::GetSeed () << ", run = " << SeedManager::GetRun ());
 
   CongestionPopExperiment experiment;
-  cout << "Run " << run << endl;
+  NS_LOG_INFO ("Run " << run);
   string prefix = "results/congestion-pop-run-" + lexical_cast<string> (run) + "-tcp-";
 
   experiment.GenerateRandomPairs (20);
@@ -74,10 +74,6 @@ main (int argc, char *argv[])
 
   boost::tuple< boost::shared_ptr<std::ostream>, std::list<Ptr<Ipv4SeqsAppTracer> > > tracers =
     Ipv4SeqsAppTracer::InstallAll (prefix + "consumers-seqs.log");
-
-  // CcnxTraceHelper traceHelper;
-  // traceHelper.EnableIpv4SeqsAppAll (prefix + "tcp-consumers-seqs.log");
-  // traceHelper.EnableWindowsTcpAll (prefix + "tcp-windows.log");
 
   experiment.Run (Seconds (200.0));
 

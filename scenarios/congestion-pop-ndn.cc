@@ -54,10 +54,10 @@ main (int argc, char *argv[])
   cmd.Parse (argc, argv);
 
   Config::SetGlobal ("RngRun", IntegerValue (run));
-  cout << "seed = " << SeedManager::GetSeed () << ", run = " << SeedManager::GetRun () << endl;
+  NS_LOG_INFO ("seed = " << SeedManager::GetSeed () << ", run = " << SeedManager::GetRun ());
 
   CongestionPopExperiment experiment;
-  cout << "Run " << run << endl;
+  NS_LOG_INFO ("Run " << run);
   string prefix = "results/congestion-pop-run-" + lexical_cast<string> (run) + "-ndn-";
 
   experiment.GenerateRandomPairs (20);
