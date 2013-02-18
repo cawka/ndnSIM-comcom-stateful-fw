@@ -6,7 +6,7 @@ Custom version of NS-3 and specified version of ndnSIM needs to be installed.
 The code should also work with the latest version of ndnSIM, but it is not guaranteed.
 
     git clone git@github.com:cawka/ns-3-dev-ndnSIM.git -b ns-3.16-ndnSIM ns-3
-    git clone git@github.com:NDN-Routing/ndnSIM.git -b v0.2.2 ns-3/src/ndnSIM
+    git clone git@github.com:NDN-Routing/ndnSIM.git -b v0.2.5 ns-3/src/ndnSIM
 
     cd ns-3
     ./waf configure
@@ -66,38 +66,47 @@ One-flow congestion scenario in a simple topology (Figure 9)
 
 Figure 9 from "A Case for Stateful Forwarding Plane" paper:
 
-To generate NDN exepriment trace (results/congestion-zoom-ndn-rate-trace.log):
+Simulation scenario for NDN flows:
 
-    NS_LOG=BaseExperiment:Experiment ./waf --run congestion-zoom-ndn
+    scenarios/congestion-zoom-ndn.cc
 
-To generate TCP experiment trace
+Simulation scenario for TCP flows:
 
-    NS_LOG=BaseExperiment:Experiment ./waf --run results/congestion-zoom-tcp-rate-trace.log
+    scenarios/congestion-zoom-tcp.cc
 
-If you have R with ggplot2 package installed, the generated files can be processed with the following R script,
-which produces a raw graph for the figure (graphs/pdfs/congestion-zoom.pdf):
+To automatically run simulations and build a graph for the simulation:
 
-    ./graphs/congestion-zoom.R
+    ./waf
+    ./run.py -s figure-9-one-flow-congestion
+
+To rebuild the graph without rerunning the simulation:
+
+    ./run.py figure-9-one-flow-congestion
+
+User ``./run.py -h`` for other options.
+
+**Note that provided scripts rely on R (http://www.r-project.org/) with ggplot2 module to be installed.**
 
 20-flow congestion scenario in Sprint POP topology (Figure 10)
 --------------------------------------------------------------
 
-To produce traces (``congestion-pop-run-1-tcp-consumers-seqs.log`` and congestion-pop-run-1-ndn-consumers-seqs.log)
-for a single run, use the following commands:
+Simulation scenario for NDN flows:
 
-    NS_LOG=BaseExperiment:Experiment ./waf --run congestion-pop-ndn
+    scenarios/congestion-pop-ndn.cc
 
-    NS_LOG=BaseExperiment:Experiment ./waf --run congestion-pop-tcp
+Simulation scenario for TCP flows:
 
-To build a graph for a single run, run the command:
+    scenarios/congestion-pop-tcp.cc
 
-    ./graphs/congestion-pop.R
+To automatically run simulations and build a graph for the simulation:
 
-There is also an automated python script, which allows running 100 simulation runs in parallel:
+    ./waf
+    ./run.py -s figure-10-twenty-flow-congestion
 
-    ./run.py
+To rebuild the graph without rerunning the simulation:
 
-To build a graph, combining all 100 runs:
+    ./run.py figure-10-twenty-flow-congestion
 
-    ./graphs/congestion-pop.R 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100
+User ``./run.py -h`` for other options.
+
 

@@ -6,7 +6,7 @@ suppressPackageStartupMessages (library(reshape2))
 
 source ("graphs/graph-style.R")
 
-tcp.data = read.table ('results/congestion-zoom-tcp-rate-trace.log', header = TRUE, sep = "\t")
+tcp.data = read.table (bzfile('results/figure-9-one-flow-congestion-tcp.txt.bz2'), header = TRUE, sep = "\t")
 tcp.data$Node = factor (tcp.data$Node)
 tcp.data$Type = factor (tcp.data$Type)
 tcp.data$Interface = factor (tcp.data$Interface-1)
@@ -14,7 +14,7 @@ tcp.data$Interface = factor (tcp.data$Interface-1)
 tcp.data = subset (tcp.data, Type == "In")[,c(1,2,3,6)]
 
 
-ndn.data = read.table ('results/congestion-zoom-ndn-rate-trace.log', header = TRUE, sep = "\t")
+ndn.data = read.table (bzfile('results/figure-9-one-flow-congestion-ndn.txt.bz2'), header = TRUE, sep = "\t")
 ndn.data$Node = factor (ndn.data$Node)
 ndn.data$Type = factor (ndn.data$Type)
 
@@ -36,7 +36,7 @@ if (!file.exists ("graphs/pdfs")) {
   dir.create ("graphs/pdfs")
 }
 
-cat ("Writing graph to [graphs/pdfs/congestion-zoom.pdf]\n")
-pdf (file = "graphs/pdfs/congestion-zoom.pdf")
+cat ("Writing graph to [graphs/pdfs/figure-9-one-flow-congestion.pdf]\n")
+pdf (file = "graphs/pdfs/figure-9-one-flow-congestion.pdf")
 g
 x = dev.off ();
