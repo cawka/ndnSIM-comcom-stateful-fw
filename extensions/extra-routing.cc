@@ -174,7 +174,7 @@ NdnGlobalRouter_CalculateAllPossibleRoutes ()
             }
 
           // disabling the face again
-          l3->GetFace (enabledFaceId)->SetMetric (std::numeric_limits<uint16_t>::max ());
+          l3->GetFace (enabledFaceId)->SetMetric (std::numeric_limits<uint16_t>::max ()-1);
         }
 
       // recover original interface statuses
