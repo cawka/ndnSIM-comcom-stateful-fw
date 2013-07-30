@@ -45,8 +45,6 @@ main (int argc, char *argv[])
 
   Config::SetDefault ("ns3::BulkSendApplication::SendSize", StringValue ("1040"));
 
-  Config::SetDefault ("ns3::RttEstimator::MaxRTO", StringValue ("1s"));
-
   uint32_t run = 1;
   CommandLine cmd;
   cmd.AddValue ("run", "Simulation run", run);

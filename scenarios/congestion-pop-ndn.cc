@@ -43,7 +43,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::PointToPointNetDevice::DataRate", StringValue ("1Mbps"));
   Config::SetDefault ("ns3::DropTailQueue::MaxPackets", StringValue ("60"));
 
-  Config::SetDefault ("ns3::RttEstimator::MaxRTO", StringValue ("1s"));
+  Config::SetDefault ("ns3::ndn::RttEstimator::MaxRTO", StringValue ("1s"));
 
   Config::SetDefault ("ns3::ndn::ConsumerWindow::Window", StringValue ("4"));
   Config::SetDefault ("ns3::ndn::ConsumerWindow::InitialWindowOnTimeout", StringValue ("false"));

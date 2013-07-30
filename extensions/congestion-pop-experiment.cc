@@ -96,7 +96,8 @@ CongestionPopExperiment::AddNdnApplications ()
       ndn::AppHelper consumerHelper ("ns3::ndn::ConsumerWindow");
       consumerHelper.SetPrefix ("/" + Names::FindName (node2));
       // consumerHelper.SetAttribute ("MeanRate", StringValue ("2Mbps"));
-      consumerHelper.SetAttribute ("Size", StringValue ("1.983642578125")); //to make sure max seq # is 2000
+      // consumerHelper.SetAttribute ("Size", StringValue ("1.983642578125")); //to make sure max seq # is 2000
+      consumerHelper.SetAttribute ("MaxSeq", StringValue ("2001"));
 
       ndn::AppHelper producerHelper ("ns3::ndn::Producer");
       producerHelper.SetPrefix ("/" + Names::FindName (node2));
